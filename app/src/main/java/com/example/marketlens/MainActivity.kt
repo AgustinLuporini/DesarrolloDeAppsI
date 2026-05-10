@@ -16,6 +16,7 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.example.marketlens.network.api.AlternativeApiService
 import com.example.marketlens.network.api.AssetNewsApiService
+import com.example.marketlens.network.api.CoinGeckoApiService
 import com.example.marketlens.network.api.FredApiService
 import com.example.marketlens.network.api.MarketApiService
 import kotlinx.coroutines.launch

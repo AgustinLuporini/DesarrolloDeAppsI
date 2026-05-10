@@ -19,6 +19,7 @@ import com.example.marketlens.network.api.AssetNewsApiService
 import com.example.marketlens.network.api.CoinGeckoApiService
 import com.example.marketlens.network.api.FredApiService
 import com.example.marketlens.network.api.MarketApiService
+import com.example.marketlens.network.api.TiingoApiService
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

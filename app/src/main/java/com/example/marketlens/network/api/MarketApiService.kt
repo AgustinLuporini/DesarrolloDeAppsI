@@ -1,4 +1,4 @@
-package com.example.marketlens.network
+package com.example.marketlens.network.api
 
 import com.example.marketlens.network.responses.MarketNewsResponse
 import retrofit2.http.GET

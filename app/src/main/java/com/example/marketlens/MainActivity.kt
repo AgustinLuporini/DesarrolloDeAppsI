@@ -14,7 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketlens.ui.theme.MarketLensTheme
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
-import com.example.marketlens.network.MarketApiService
+import com.example.marketlens.network.api.AlternativeApiService
+import com.example.marketlens.network.api.MarketApiService
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,7 +1,7 @@
-package com.example.marketlens.network.responses
+package com.example.marketlens.data.results
 import com.google.gson.annotations.SerializedName
 
-data class FredResponse(
+data class FredResult(
     @SerializedName("observations") val observations: List<FredObservation>?
 )
 data class FredObservation(

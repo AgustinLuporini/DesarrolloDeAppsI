@@ -1,8 +1,8 @@
-package com.example.marketlens.network.responses
+package com.example.marketlens.data.results
 
 import com.google.gson.annotations.SerializedName
 
-data class CoinGeckoMarketItem(
+data class CoinGeckoResult(
     @SerializedName("id") val id: String?,
     @SerializedName("symbol") val symbol: String?,
     @SerializedName("name") val name: String?,

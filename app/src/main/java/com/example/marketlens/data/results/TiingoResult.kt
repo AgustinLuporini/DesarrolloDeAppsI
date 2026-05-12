@@ -1,8 +1,8 @@
-package com.example.marketlens.network.responses
+package com.example.marketlens.data.results
 
 import com.google.gson.annotations.SerializedName
 
-data class TiingoStockItem(
+data class TiingoResult(
     @SerializedName("ticker") val ticker: String?,
     @SerializedName("last") val lastPrice: Double?, // El 'tngoLast' o 'last'
     @SerializedName("open") val open: Double?,

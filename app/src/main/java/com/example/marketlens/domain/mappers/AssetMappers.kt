@@ -1,10 +1,10 @@
 package com.example.marketlens.domain.mappers
 
 import com.example.marketlens.domain.models.Asset
-import com.example.marketlens.network.responses.CoinGeckoMarketItem
-import com.example.marketlens.network.responses.TiingoStockItem
+import com.example.marketlens.data.results.CoinGeckoResult
+import com.example.marketlens.data.results.TiingoResult
 
-fun CoinGeckoMarketItem.toDomain(): Asset.Crypto {
+fun CoinGeckoResult.toDomain(): Asset.Crypto {
     return Asset.Crypto(
         ticker = this.symbol?.uppercase() ?: "",
         name = this.name ?: "Unknown",
@@ -25,15 +25,14 @@ fun CoinGeckoMarketItem.toDomain(): Asset.Crypto {
     )
 }
 
-// Mapper para Acciones
-fun TiingoStockItem.toDomain(): Asset.Stock {
-    // Calculamos el porcentaje de cambio porque Tiingo no lo da servido
+fun TiingoResult.toDomain(): Asset.Stock {
+
     val diff = (this.lastPrice ?: 0.0) - (this.prevClose ?: 0.0)
     val pct = if (this.prevClose != null && this.prevClose != 0.0) (diff / this.prevClose) * 100 else 0.0
 
     return Asset.Stock(
         ticker = this.ticker ?: "",
-        name = this.ticker ?: "", // Tiingo IEX no suele dar el nombre largo, usamos el ticker
+        name = this.ticker ?: "", // Tiingo no da nombre largo
         currentPrice = this.lastPrice ?: 0.0,
         changePercentage = pct,
         open = this.open,

@@ -1,4 +1,4 @@
-package com.example.marketlens.network.responses
+package com.example.marketlens.data.results
 
 import com.google.gson.annotations.SerializedName
 

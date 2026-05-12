@@ -12,17 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.marketlens.ui.theme.MarketLensTheme
-import android.util.Log
-import androidx.lifecycle.lifecycleScope
-import com.example.marketlens.network.api.AlternativeApiService
-import com.example.marketlens.network.api.AssetNewsApiService
-import com.example.marketlens.network.api.CoinGeckoApiService
-import com.example.marketlens.network.api.FredApiService
-import com.example.marketlens.network.api.MarketApiService
-import com.example.marketlens.network.api.TiingoApiService
-import kotlinx.coroutines.launch
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

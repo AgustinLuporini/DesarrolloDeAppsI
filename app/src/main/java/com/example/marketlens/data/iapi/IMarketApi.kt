@@ -1,15 +1,16 @@
-package com.example.marketlens.network.api
+//Finnhub noticias tradicionales
+package com.example.marketlens.data.iapi
 
-import com.example.marketlens.network.responses.MarketNewsResponse
+import com.example.marketlens.data.results.MarketNewsResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface MarketApiService {
+interface IMarketApi {
     @GET("api/v1/news")
     suspend fun getMarketNews(
         @Query("category") category: String = "general",
         @Query("token") apiKey: String
-    ): List<MarketNewsResponse>
+    ): List<MarketNewsResult>
 
     @GET("api/v1/company-news")
     suspend fun getCompanyNews(
@@ -17,5 +18,5 @@ interface MarketApiService {
         @Query("from") from: String, // Formato YYYY-MM-DD
         @Query("to") to: String,
         @Query("token") apiKey: String
-    ): List<MarketNewsResponse>
+    ): List<MarketNewsResult>
 }

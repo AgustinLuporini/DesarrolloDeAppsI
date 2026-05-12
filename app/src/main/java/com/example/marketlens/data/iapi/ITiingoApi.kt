@@ -1,13 +1,13 @@
-package com.example.marketlens.network.api
+package com.example.marketlens.data.iapi
 
-import com.example.marketlens.network.responses.TiingoStockItem
+import com.example.marketlens.data.results.TiingoResult
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface TiingoApiService {
+interface ITiingoApi {
     @GET("iex/") // IEX es el endpoint para precios en tiempo real (con un poco de delay)
     suspend fun getStockQuotes(
         @Query("tickers") tickers: String,
         @Query("token") apiKey: String
-    ): List<TiingoStockItem>
+    ): List<TiingoResult>
 }

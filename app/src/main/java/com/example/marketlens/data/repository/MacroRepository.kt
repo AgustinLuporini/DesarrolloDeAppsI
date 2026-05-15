@@ -28,4 +28,19 @@ class MacroRepository : IMacroRepository {
 
         return result.toDomain(label)
     }
+
+    // En MacroRepository.kt
+    suspend fun getAllMacroIndicators(apiKey: String): List<MacroIndicator> {
+        val ids = listOf(
+            "GDP" to "PBI (USA)",
+            "CPIAUCSL" to "Inflación (CPI)",
+            "FEDFUNDS" to "Tasa de Interés",
+            "UNRATE" to "Tasa de Desempleo"
+        )
+
+        return ids.map { (id, label) ->
+            val result = dataSource.getFredData(id, apiKey)
+            result.toDomain(label)
+        }
+    }
 }

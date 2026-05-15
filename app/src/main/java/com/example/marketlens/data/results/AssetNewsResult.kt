@@ -6,9 +6,11 @@ data class AssetNewsResponse(
     @SerializedName("data") val data: List<AssetNewsItem>?
 )
 data class AssetNewsItem(
+    @SerializedName("uuid") val uuid: String?,
     @SerializedName("title") val title: String?,
     @SerializedName("description") val description: String?,
     @SerializedName("url") val url: String?,
+    @SerializedName("source") val source: String?,
     @SerializedName("entities") val entities: List<AssetSentiment>?
 )
 data class AssetSentiment(

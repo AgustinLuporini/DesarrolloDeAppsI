@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.marketlens.components.home.HomeScreen
+import com.example.marketlens.components.market.MarketScreen
 
 @Composable
 fun NavigationStack() {
@@ -19,9 +20,9 @@ fun NavigationStack() {
             HomeScreen(navController = navController)
         }
 
-        // Pantalla de Mercados (La crearemos después)
+        // Pantalla de Mercados
         composable(Screen.Market.route) {
-            // MarketScreen(navController)
+            MarketScreen(navController)
         }
 
         // Perfil

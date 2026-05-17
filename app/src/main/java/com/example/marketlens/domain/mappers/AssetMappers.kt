@@ -18,15 +18,24 @@ fun CoinGeckoResult.toDomain(): Crypto {
 }
 
 fun TiingoResult.toDomain(): Stock {
-    val diff = (this.lastPrice ?: 0.0) - (this.prevClose ?: 0.0)
-    val pct = if (this.prevClose != null && this.prevClose != 0.0) (diff / this.prevClose) * 100 else 0.0
+    val price = this.lastPrice ?: this.prevClose ?: 0.0
+
+    val pct = if (this.lastPrice != null && this.prevClose != null && this.prevClose != 0.0) {
+        // Mercado Abierto -> Variación en tiempo real del día de hoy
+        ((this.lastPrice - this.prevClose) / this.prevClose) * 100
+    } else if (this.prevClose != null && this.open != null && this.open != 0.0) {
+        // Mercado Cerrado -> Variación del último día completo operado (Cierre vs Apertura)
+        ((this.prevClose - this.open) / this.open) * 100
+    } else {
+        0.0
+    }
 
     return Stock(
         ticker = this.ticker ?: "???",
-        name = this.ticker ?: "Unknown", // Tiingo no da el nombre largo en este endpoint
-        currentPrice = this.lastPrice ?: 0.0,
+        name = this.ticker ?: "Unknown",
+        currentPrice = price, // Usamos el precio ya sanitizado
         changePercentage = pct,
-        imageUrl = null, // Tiingo da imagen del logo
+        imageUrl = null,
         openPrice = this.open ?: 0.0,
         highPrice = this.high ?: 0.0
     )

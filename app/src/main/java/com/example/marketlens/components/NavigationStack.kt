@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.marketlens.components.detail.AssetDetailScreen
 import com.example.marketlens.components.home.HomeScreen
 import com.example.marketlens.components.market.MarketScreen
 
@@ -28,6 +29,18 @@ fun NavigationStack() {
         // Perfil
         composable(Screen.Profile.route) {
             // ProfileScreen(navController)
+        }
+
+        // Detail
+        composable(
+            route = "asset_detail_screen/{ticker}/{name}/{price}/{change}"
+        ) { backStackEntry ->
+            val ticker = backStackEntry.arguments?.getString("ticker") ?: ""
+            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val price = backStackEntry.arguments?.getString("price")?.toDoubleOrNull() ?: 0.0
+            val change = backStackEntry.arguments?.getString("change")?.toDoubleOrNull() ?: 0.0
+
+            AssetDetailScreen(ticker = ticker, name = name, price = price, change = change)
         }
     }
 }

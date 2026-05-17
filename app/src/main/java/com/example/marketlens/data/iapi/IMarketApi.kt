@@ -13,10 +13,12 @@ interface IMarketApi {
     ): List<MarketNewsResult>
 
     @GET("api/v1/company-news")
-    suspend fun getCompanyNews(
+    suspend fun getAssetNews(
         @Query("symbol") symbol: String,
         @Query("from") from: String, // Formato YYYY-MM-DD
         @Query("to") to: String,
         @Query("token") apiKey: String
     ): List<MarketNewsResult>
+
+
 }

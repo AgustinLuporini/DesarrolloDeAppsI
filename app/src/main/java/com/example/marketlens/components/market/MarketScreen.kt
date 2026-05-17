@@ -79,7 +79,9 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                         Text("Criptomonedas", color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     }
                     items(filteredCryptos) { crypto ->
-                        AssetRow(asset = crypto, onClick = { /* Ir al detalle después */ })
+                        AssetRow(asset = crypto, onClick = {
+                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}")
+                        })
                     }
                 }
 
@@ -89,7 +91,9 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                         Text("Acciones", color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     }
                     items(filteredStocks) { stock ->
-                        AssetRow(asset = stock, onClick = { /* Ir al detalle después */ })
+                        AssetRow(asset = stock, onClick = {
+                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}")
+                        })
                     }
                 }
 

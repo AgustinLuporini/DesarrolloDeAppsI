@@ -29,7 +29,7 @@ class MarketScreenViewModel : ViewModel() {
                     tickers = "AAPL,MSFT,GOOGL,AMZN,TSLA,NVDA,META,AVGO,ORCL,ADBE,CRM,AMD,NFLX," +
                             "CSCO,INTC,TXN,QCOM,IBM,JPM,BAC,WFC,GS,MS,V,MA,PYPL,WMT,COST,PG,KO," +
                             "PEP,NKE,MCD,DIS,SBUX,XOM,CVX,CAT,GE,HON,BA,JNJ,LLY,UNH,PFE,ABBV,MRK," +
-                            "T,VZ,UPS",
+                            "GLOB,VZ,UPS",
                     token = NetworkConfig.TIINGO_KEY
                 )
 

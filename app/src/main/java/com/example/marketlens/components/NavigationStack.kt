@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.marketlens.components.detail.AssetDetailScreen
 import com.example.marketlens.components.home.HomeScreen
 import com.example.marketlens.components.market.MarketScreen
+import com.example.marketlens.components.splash.SplashScreen
 
 @Composable
 fun NavigationStack() {
@@ -14,8 +15,12 @@ fun NavigationStack() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Splash.route
     ) {
+        // Splash
+        composable(Screen.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         // Pantalla Principal
         composable(Screen.Home.route) {
             HomeScreen(navController = navController)

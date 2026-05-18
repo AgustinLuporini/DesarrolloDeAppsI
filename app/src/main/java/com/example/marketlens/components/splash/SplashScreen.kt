@@ -34,7 +34,17 @@ fun SplashScreen(
 
     // COPIA EXACTA DE LA LÓGICA DEL PROFE: Espera 2 segundos y navega al Home
     LaunchedEffect(Unit) {
+        // 🔴 LOG 1: Registra el inicio del Splash
+        android.util.Log.d("MarketLensTRACK", "[SPLASH] ---> Iniciaron los 2 segundos de animación")
+
         delay(2000)
+
+        // 🔴 LOG 2: Registra el fin del Splash
+        android.util.Log.d("MarketLensTRACK", "[SPLASH] ---> Fin del tiempo, ejecutando navegación a Home")
+        navController.navigate(Screen.Home.route) {
+            popUpTo(Screen.Splash.route) { inclusive = true }
+        }
+
         navController.navigate(Screen.Home.route) {
             // El profe lo dejó comentado, pero si querés evitar que el usuario vuelva
             // al splash al apretar el botón "atrás", podés descomentar estas líneas:

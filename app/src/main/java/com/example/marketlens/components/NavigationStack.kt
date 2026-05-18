@@ -1,17 +1,20 @@
 package com.example.marketlens.components
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.marketlens.components.detail.AssetDetailScreen
 import com.example.marketlens.components.home.HomeScreen
+import com.example.marketlens.components.home.HomeScreenViewModel
 import com.example.marketlens.components.market.MarketScreen
 import com.example.marketlens.components.splash.SplashScreen
 
 @Composable
 fun NavigationStack() {
     val navController = rememberNavController()
+    val sharedHomeViewModel: HomeScreenViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -23,7 +26,7 @@ fun NavigationStack() {
         }
         // Pantalla Principal
         composable(Screen.Home.route) {
-            HomeScreen(navController = navController)
+            HomeScreen(navController = navController, viewModel = sharedHomeViewModel)
         }
 
         // Pantalla de Mercados

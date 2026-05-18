@@ -30,24 +30,11 @@ fun SplashScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val marketGreen = Color(0xFF00C853) // El verde característico de tu propuesta
+    val marketGreen = Color(0xFF00C853)
 
-    // COPIA EXACTA DE LA LÓGICA DEL PROFE: Espera 2 segundos y navega al Home
     LaunchedEffect(Unit) {
-        // 🔴 LOG 1: Registra el inicio del Splash
-        android.util.Log.d("MarketLensTRACK", "[SPLASH] ---> Iniciaron los 2 segundos de animación")
-
         delay(2000)
-
-        // 🔴 LOG 2: Registra el fin del Splash
-        android.util.Log.d("MarketLensTRACK", "[SPLASH] ---> Fin del tiempo, ejecutando navegación a Home")
         navController.navigate(Screen.Home.route) {
-            popUpTo(Screen.Splash.route) { inclusive = true }
-        }
-
-        navController.navigate(Screen.Home.route) {
-            // El profe lo dejó comentado, pero si querés evitar que el usuario vuelva
-            // al splash al apretar el botón "atrás", podés descomentar estas líneas:
             popUpTo(Screen.Splash.route) {
                 inclusive = true
             }
@@ -57,15 +44,14 @@ fun SplashScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Color.Black), // Forzamos el Negro Puro de MarketLens
+            .background(Color.Black),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Imagen central / Logo financiero (Podés cambiar la URL por cualquier icon posterior)
             AsyncImage(
-                model = "https://cdn-icons-png.flaticon.com/512/2422/2422796.png", // Icono analítico/lente
+                model = "https://cdn-icons-png.flaticon.com/512/2422/2422796.png",
                 contentDescription = "Logo MarketLens",
                 modifier = Modifier
                     .size(200.dp),
@@ -74,19 +60,19 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Título de tu aplicación
+
             Text(
                 text = "MarketLens",
                 style = MaterialTheme.typography.headlineMedium.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp
                 ),
-                color = marketGreen // Resaltado verde financiero
+                color = marketGreen
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Eslogan alineado con tu propuesta de valor del TPO
+
             Text(
                 text = "Tu ventana al mercado global",
                 style = MaterialTheme.typography.bodyMedium,

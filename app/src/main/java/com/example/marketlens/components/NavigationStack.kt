@@ -9,6 +9,7 @@ import com.example.marketlens.components.detail.AssetDetailScreen
 import com.example.marketlens.components.home.HomeScreen
 import com.example.marketlens.components.home.HomeScreenViewModel
 import com.example.marketlens.components.market.MarketScreen
+import com.example.marketlens.components.profile.ProfileScreen
 import com.example.marketlens.components.splash.SplashScreen
 
 @Composable
@@ -36,7 +37,7 @@ fun NavigationStack() {
 
         // Perfil
         composable(Screen.Profile.route) {
-            // ProfileScreen(navController)
+            ProfileScreen(navController)
         }
 
         // Detail

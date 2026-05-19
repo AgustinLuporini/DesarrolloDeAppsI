@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "20514099230",
+    "project_id": "marketlens-b49c7",
+    "storage_bucket": "marketlens-b49c7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20514099230:android:c261e02dd77056720b5e0f",
+        "android_client_info": {
+          "package_name": "com.example.marketlens"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20514099230-vgd6ofvnntq653emn2acqmv02iascb5o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.marketlens",
+            "certificate_hash": "700f5a0f38d97d013dcc25762c3d3b336ee920d8"
+          }
+        },
+        {
+          "client_id": "20514099230-sv61aitg459430154b18he7g9rk1is3l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAr5xl6HN427RZx9DZOnlCPk421UchGFqU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20514099230-sv61aitg459430154b18he7g9rk1is3l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

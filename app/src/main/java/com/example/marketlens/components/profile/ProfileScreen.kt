@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.marketlens.components.Screen
 
 @Composable
 fun ProfileScreen(
@@ -94,11 +95,18 @@ fun ProfileScreen(
 
         // --- BOTÓN DE LOG OUT ---
         Button(
-            onClick = { viewModel.logOut() },
+            // ACA ESTÁ EL CAMBIO CLAVE:
+            onClick = {
+                viewModel.logOut {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(Screen.Home.route) { inclusive = true }
+                    }
+                }
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)), // Rojo descriptivo de salida
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(

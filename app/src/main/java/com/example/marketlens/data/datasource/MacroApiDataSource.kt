@@ -11,6 +11,6 @@ class MacroApiDataSource {
     private val fredApi = RetrofitInstance.fredService
     private val alternativeApi = RetrofitInstance.alternativeService
 
-    suspend fun getFredData(id: String, key: String) = fredApi.getObservation(id, key)
+    suspend fun getFredData(id: String, key: String, limit: Int = 14) = fredApi.getObservation(id, key)
     suspend fun getFearGreed() = alternativeApi.getFearAndGreed()
 }

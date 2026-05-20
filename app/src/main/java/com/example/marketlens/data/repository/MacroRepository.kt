@@ -39,7 +39,7 @@ class MacroRepository : IMacroRepository {
         )
 
         return ids.map { (id, label) ->
-            val result = dataSource.getFredData(id, apiKey)
+            val result = dataSource.getFredData(id, apiKey, limit = 14)
             result.toDomain(label)
         }
     }

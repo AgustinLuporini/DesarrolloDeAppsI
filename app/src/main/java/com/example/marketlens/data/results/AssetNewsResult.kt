@@ -10,6 +10,8 @@ data class AssetNewsItem(
     @SerializedName("title") val title: String?,
     @SerializedName("description") val description: String?,
     @SerializedName("url") val url: String?,
+    @SerializedName("image_url") val imageUrl: String?,
+    @SerializedName("published_at") val publishedAt: String?,
     @SerializedName("source") val source: String?,
     @SerializedName("entities") val entities: List<AssetSentiment>?
 )

@@ -7,5 +7,7 @@ data class MarketNews(
     val url: String,
     val source: String,
     val datetime: Long,
-    val sentimentScore: Double? = null // Solo lo tiene Stockdata
+    val sentimentScore: Double? = null, // Solo lo tiene Stockdata
+    val imageUrl: String,
+    val date: String
 )

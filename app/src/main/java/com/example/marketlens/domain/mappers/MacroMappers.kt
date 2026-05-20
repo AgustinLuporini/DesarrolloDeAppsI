@@ -13,7 +13,7 @@ fun FearGreedResult.toDomain(): MacroIndicator {
 }
 
 fun FredResult.toDomain(seriesName: String): MacroIndicator {
-    val data = this.observations?.firstOrNull()
+    val data = this.observations?.lastOrNull { it.value != "." }
     return MacroIndicator(
         value = data?.value ?: "0",
         description = seriesName

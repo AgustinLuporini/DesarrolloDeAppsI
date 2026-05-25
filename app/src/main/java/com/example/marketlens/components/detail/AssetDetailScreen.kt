@@ -25,7 +25,7 @@ fun AssetDetailScreen(
     name: String,
     price: Double,
     change: Double,
-    isCrypto: Boolean, // Requiere ajuste en NavigationStack
+    isCrypto: Boolean,
     viewModel: AssetDetailScreenViewModel = viewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()

@@ -39,12 +39,13 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(16.dp)
+            .systemBarsPadding() // FIX: Mantiene el título principal lejos de la barra de estado superior
+            .padding(horizontal = 20.dp, vertical = 16.dp) // Márgenes laterales más amplios y modernos
     ) {
         Text(
             text = "Mercados",
             color = accentGreen,
-            fontSize = 24.sp,
+            fontSize = 28.sp, // Un toque más grande para que parezca un header real
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -55,15 +56,18 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
             onValueChange = { viewModel.onSearchQueryChanged(it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp),
+                .padding(bottom = 20.dp), // Un poco más de aire antes de la lista
             placeholder = { Text("Buscar por ticker...", color = Color.Gray) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar", tint = accentGreen) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = accentGreen,
                 unfocusedBorderColor = Color.DarkGray,
                 focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White
-            )
+                unfocusedTextColor = Color.White,
+                focusedContainerColor = Color(0xFF1A1A1A), // Hace que el input se vea mejor al seleccionarlo
+                unfocusedContainerColor = Color(0xFF1A1A1A)
+            ),
+            shape = MaterialTheme.shapes.medium
         )
 
         if (state.isLoading) {
@@ -71,7 +75,10 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                 CircularProgressIndicator(color = accentGreen)
             }
         } else {
-            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 80.dp) // FIX: Evita que el último elemento quede cortado por la navegación del celu
+            ) {
 
                 // Criptos
                 if (filteredCryptos.isNotEmpty()) {
@@ -80,7 +87,8 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                     }
                     items(filteredCryptos) { crypto ->
                         AssetRow(asset = crypto, onClick = {
-                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}/true")
+                            // FIX: Ruta simplificada sin el isCrypto final (vuelve al diseño original seguro)
+                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}")
                         })
                     }
                 }
@@ -88,11 +96,13 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                 // Acciones
                 if (filteredStocks.isNotEmpty()) {
                     item {
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text("Acciones", color = Color.Gray, fontSize = 14.sp, fontWeight = FontWeight.Bold)
                     }
                     items(filteredStocks) { stock ->
                         AssetRow(asset = stock, onClick = {
-                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}/false")
+                            // FIX: Ruta simplificada
+                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}")
                         })
                     }
                 }

@@ -31,15 +31,16 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .padding(16.dp)
+            .systemBarsPadding() // FIX: Evita que el contenido se superponga con la barra de estado superior e inferior
+            .padding(horizontal = 20.dp, vertical = 16.dp) // FIX: Márgenes unificados con el resto de la app
     ) {
         // --- INFORMACIÓN DEL USUARIO ---
         Text(
             text = state.userName,
             color = Color.White,
-            fontSize = 28.sp,
+            fontSize = 32.sp, // Aumentado ligeramente para coincidir con los headers de otras pantallas
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 4.dp)
         )
         Text(
             text = "Usuario MarketLens",
@@ -54,20 +55,21 @@ fun ProfileScreen(
         Text(
             text = "Mis Activos Favoritos",
             color = Color.Gray,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp, // Ajustado para mantener jerarquía visual con el header
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
         // LazyColumn para listar
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.weight(1f)
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.weight(1f),
+            contentPadding = PaddingValues(bottom = 16.dp)
         ) {
             items(state.favoriteAssets) { ticker ->
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = Color(0xFF121212)),
-                    shape = RoundedCornerShape(8.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                    shape = RoundedCornerShape(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -86,7 +88,7 @@ fun ProfileScreen(
                         Text(
                             text = "★",
                             color = accentGreen,
-                            fontSize = 18.sp
+                            fontSize = 20.sp
                         )
                     }
                 }
@@ -95,7 +97,6 @@ fun ProfileScreen(
 
         // --- BOTÓN DE LOG OUT ---
         Button(
-            // ACA ESTÁ EL CAMBIO CLAVE:
             onClick = {
                 viewModel.logOut {
                     navController.navigate(Screen.Login.route) {
@@ -105,15 +106,16 @@ fun ProfileScreen(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 16.dp),
+                .padding(bottom = 16.dp, top = 8.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFD32F2F)),
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(12.dp)
         ) {
             Text(
                 text = "Cerrar Sesión",
                 color = Color.White,
                 fontWeight = FontWeight.Bold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.padding(vertical = 4.dp)
             )
         }
     }

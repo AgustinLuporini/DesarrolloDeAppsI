@@ -38,9 +38,9 @@ class AssetDetailScreenViewModel : ViewModel() {
 
                 // Mocks dinámicos de datos técnicos dependiendo del tipo de activo
                 val updatedState = if (isCrypto) {
-                    _uiState.value.copy(marketCap = price * 19000000, ath = price * 1.4)
+                    _uiState.value.copy(marketCap = price, ath = price)
                 } else {
-                    _uiState.value.copy(openPrice = price * 0.98, highPrice = price * 1.02)
+                    _uiState.value.copy(openPrice = price, highPrice = price)
                 }
 
                 _uiState.value = updatedState.copy(

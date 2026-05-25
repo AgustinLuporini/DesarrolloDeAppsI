@@ -1,7 +1,16 @@
+import java.util.Properties
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+}
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(FileInputStream(localPropertiesFile))
 }
 
 android {
@@ -20,6 +29,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "FINNHUB_KEY", "\"${localProperties.getProperty("FINNHUB_API_KEY")}\"")
+        buildConfigField("String", "TIINGO_KEY", "\"${localProperties.getProperty("TIINGO_API_KEY")}\"")
+        buildConfigField("String", "STOCKDATA_KEY", "\"${localProperties.getProperty("STOCKDATA_API_KEY")}\"")
+        buildConfigField("String", "FRED_KEY", "\"${localProperties.getProperty("FRED_API_KEY")}\"")
     }
 
     buildTypes {
@@ -37,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 

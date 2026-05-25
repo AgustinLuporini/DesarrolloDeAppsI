@@ -95,15 +95,26 @@ fun NavigationStack() {
         }
 
         // Detail
+// Detail
         composable(
-            route = "asset_detail_screen/{ticker}/{name}/{price}/{change}"
+            // 1. Agregamos {isCrypto} al final de la ruta
+            route = "asset_detail_screen/{ticker}/{name}/{price}/{change}/{isCrypto}"
         ) { backStackEntry ->
             val ticker = backStackEntry.arguments?.getString("ticker") ?: ""
             val name = backStackEntry.arguments?.getString("name") ?: ""
             val price = backStackEntry.arguments?.getString("price")?.toDoubleOrNull() ?: 0.0
             val change = backStackEntry.arguments?.getString("change")?.toDoubleOrNull() ?: 0.0
 
-            AssetDetailScreen(ticker = ticker, name = name, price = price, change = change)
+            // 2. Extraemos el booleano (si falla, por defecto asume que es falso/acción)
+            val isCrypto = backStackEntry.arguments?.getString("isCrypto")?.toBoolean() ?: false
+
+            AssetDetailScreen(
+                ticker = ticker,
+                name = name,
+                price = price,
+                change = change,
+                isCrypto = isCrypto // 3. Se lo pasamos a la pantalla
+            )
         }
     }
 }

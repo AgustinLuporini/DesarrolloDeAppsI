@@ -80,7 +80,7 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                     }
                     items(filteredCryptos) { crypto ->
                         AssetRow(asset = crypto, onClick = {
-                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}")
+                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}/true")
                         })
                     }
                 }
@@ -92,7 +92,7 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                     }
                     items(filteredStocks) { stock ->
                         AssetRow(asset = stock, onClick = {
-                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}")
+                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}/false")
                         })
                     }
                 }

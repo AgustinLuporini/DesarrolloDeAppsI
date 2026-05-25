@@ -16,31 +16,34 @@ class AssetDetailScreenViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(AssetDetailScreenState())
     val uiState: StateFlow<AssetDetailScreenState> = _uiState.asStateFlow()
 
-    fun loadAssetDetails(ticker: String, name: String, price: Double, change: Double) {
-        // Inicializamos el estado con los datos que ya tenemos de la lista
+    fun loadAssetDetails(ticker: String, name: String, price: Double, change: Double, isCrypto: Boolean) {
         _uiState.value = _uiState.value.copy(
             isLoading = true,
             ticker = ticker,
             assetName = name,
             currentPrice = price,
-            changePercentage = change
+            changePercentage = change,
+            isCrypto = isCrypto
         )
 
         viewModelScope.launch {
             try {
-                // Calculo de fechas
                 val today = LocalDate.now().toString()
                 val aWeekAgo = LocalDate.now().minusDays(7).toString()
 
-                // Llamado a Stockdata
                 val stockdataData = newsRepository.getAssetSentiment(ticker, NetworkConfig.STOCKDATA_KEY)
-
-                // 2. Llamada a Finnhub
                 val finnhubData = newsRepository.getAssetNews(ticker, aWeekAgo, today, NetworkConfig.FINNHUB_KEY)
 
                 val mockAiSummary = "Analizando el sentimiento de las ${stockdataData.size + finnhubData.size} noticias encontradas para $ticker... Próximamente resumen con IA."
 
-                _uiState.value = _uiState.value.copy(
+                // Mocks dinámicos de datos técnicos dependiendo del tipo de activo
+                val updatedState = if (isCrypto) {
+                    _uiState.value.copy(marketCap = price * 19000000, ath = price * 1.4)
+                } else {
+                    _uiState.value.copy(openPrice = price * 0.98, highPrice = price * 1.02)
+                }
+
+                _uiState.value = updatedState.copy(
                     isLoading = false,
                     assetNews = stockdataData,
                     finnhubNews = finnhubData,

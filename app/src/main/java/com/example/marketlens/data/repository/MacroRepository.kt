@@ -13,7 +13,6 @@ class MacroRepository : IMacroRepository {
         return result.toDomain()
     }
 
-    // Corregimos: Recibe los datos del DataSource y los MAPEA a dominio
     override suspend fun getEconomicIndex(seriesId: String, apiKey: String): MacroIndicator {
         val result = dataSource.getFredData(seriesId, apiKey)
 
@@ -29,7 +28,6 @@ class MacroRepository : IMacroRepository {
         return result.toDomain(label)
     }
 
-    // En MacroRepository.kt
     suspend fun getAllMacroIndicators(apiKey: String): List<MacroIndicator> {
         val ids = listOf(
             "GDP" to "PBI (USA)",

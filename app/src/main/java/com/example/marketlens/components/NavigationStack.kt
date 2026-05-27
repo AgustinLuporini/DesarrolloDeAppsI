@@ -40,14 +40,12 @@ fun NavigationStack() {
         composable(Screen.Login.route) {
             val context = LocalContext.current
 
-            //Google Sign-In
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(context.getString(R.string.default_web_client_id)) // Clave de Firebase
+                .requestIdToken(context.getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build()
             val googleSignInClient = GoogleSignIn.getClient(context, gso)
 
-            //Redirigir a Google
             val launcher = rememberLauncherForActivityResult(
                 contract = ActivityResultContracts.StartActivityForResult()
             ) { result ->
@@ -55,12 +53,10 @@ fun NavigationStack() {
                     val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                     try {
                         val account = task.result
-                        // Pedir a firebase que inicie sesión
                         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                         FirebaseAuth.getInstance().signInWithCredential(credential)
                             .addOnCompleteListener { authTask ->
                                 if (authTask.isSuccessful) {
-                                    // Si todo sale bien, navegamos al Home
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(Screen.Login.route) { inclusive = true }
                                     }
@@ -95,17 +91,15 @@ fun NavigationStack() {
         }
 
         // Detail
-// Detail
         composable(
-            // 1. Agregamos {isCrypto} al final de la ruta
             route = "asset_detail_screen/{ticker}/{name}/{price}/{change}/{isCrypto}"
         ) { backStackEntry ->
             val ticker = backStackEntry.arguments?.getString("ticker") ?: ""
-            val name = backStackEntry.arguments?.getString("name") ?: ""
+            val encodedName = backStackEntry.arguments?.getString("name") ?: ""
+            val name = java.net.URLDecoder.decode(encodedName, "UTF-8")
             val price = backStackEntry.arguments?.getString("price")?.toDoubleOrNull() ?: 0.0
             val change = backStackEntry.arguments?.getString("change")?.toDoubleOrNull() ?: 0.0
 
-            // 2. Extraemos el booleano (si falla, por defecto asume que es falso/acción)
             val isCrypto = backStackEntry.arguments?.getString("isCrypto")?.toBoolean() ?: false
 
             AssetDetailScreen(
@@ -113,7 +107,7 @@ fun NavigationStack() {
                 name = name,
                 price = price,
                 change = change,
-                isCrypto = isCrypto // 3. Se lo pasamos a la pantalla
+                isCrypto = isCrypto
             )
         }
     }

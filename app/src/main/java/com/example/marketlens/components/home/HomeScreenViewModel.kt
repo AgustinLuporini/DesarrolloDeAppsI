@@ -25,7 +25,6 @@ class HomeScreenViewModel : ViewModel() {
     fun fetchHomeData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            // 🔵 LOG 3: Registra que el ViewModel ya se despertó
             android.util.Log.d("MarketLensTRACK", "[VIEWMODEL] !!! Nací en memoria. Saliendo a buscar datos a FRED y Finnhub ahora mismo")
             try {
                 val news = newsRepository.getMarketNews(NetworkConfig.FINNHUB_KEY)
@@ -39,7 +38,6 @@ class HomeScreenViewModel : ViewModel() {
                     macroIndicators = macro
                 )
 
-                // 🔵 LOG 4: Registra que los datos de internet ya llegaron
                 android.util.Log.d("MarketLensTRACK", "[VIEWMODEL] ✓ Éxito: Datos macro y noticias descargados por completo")
 
 

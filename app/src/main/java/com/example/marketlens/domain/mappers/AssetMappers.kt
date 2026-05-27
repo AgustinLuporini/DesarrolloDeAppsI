@@ -21,10 +21,8 @@ fun TiingoResult.toDomain(): Stock {
     val price = this.lastPrice ?: this.prevClose ?: 0.0
 
     val pct = if (this.lastPrice != null && this.prevClose != null && this.prevClose != 0.0) {
-        // Mercado Abierto -> Variación en tiempo real del día de hoy
         ((this.lastPrice - this.prevClose) / this.prevClose) * 100
     } else if (this.prevClose != null && this.open != null && this.open != 0.0) {
-        // Mercado Cerrado -> Variación del último día completo operado (Cierre vs Apertura)
         ((this.prevClose - this.open) / this.open) * 100
     } else {
         0.0
@@ -33,7 +31,7 @@ fun TiingoResult.toDomain(): Stock {
     return Stock(
         ticker = this.ticker ?: "???",
         name = this.ticker ?: "Unknown",
-        currentPrice = price, // Usamos el precio ya sanitizado
+        currentPrice = price,
         changePercentage = pct,
         imageUrl = null,
         openPrice = this.open ?: 0.0,

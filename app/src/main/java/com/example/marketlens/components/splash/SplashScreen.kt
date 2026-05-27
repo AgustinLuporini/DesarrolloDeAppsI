@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.marketlens.components.Screen
 import coil.compose.AsyncImage
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 
 @Composable
@@ -34,7 +35,12 @@ fun SplashScreen(
 
     LaunchedEffect(Unit) {
         delay(2000)
-        navController.navigate(Screen.Home.route) {
+        val destination = if (FirebaseAuth.getInstance().currentUser != null) {
+            Screen.Home.route
+        } else {
+            Screen.Login.route
+        }
+        navController.navigate(destination) {
             popUpTo(Screen.Splash.route) {
                 inclusive = true
             }

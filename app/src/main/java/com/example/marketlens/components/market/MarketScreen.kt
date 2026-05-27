@@ -39,13 +39,13 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .systemBarsPadding() // FIX: Mantiene el título principal lejos de la barra de estado superior
-            .padding(horizontal = 20.dp, vertical = 16.dp) // Márgenes laterales más amplios y modernos
+            .systemBarsPadding()
+            .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         Text(
             text = "Mercados",
             color = accentGreen,
-            fontSize = 28.sp, // Un toque más grande para que parezca un header real
+            fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -56,7 +56,7 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
             onValueChange = { viewModel.onSearchQueryChanged(it) },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp), // Un poco más de aire antes de la lista
+                .padding(bottom = 20.dp),
             placeholder = { Text("Buscar por ticker...", color = Color.Gray) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar", tint = accentGreen) },
             colors = OutlinedTextFieldDefaults.colors(
@@ -64,7 +64,7 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                 unfocusedBorderColor = Color.DarkGray,
                 focusedTextColor = Color.White,
                 unfocusedTextColor = Color.White,
-                focusedContainerColor = Color(0xFF1A1A1A), // Hace que el input se vea mejor al seleccionarlo
+                focusedContainerColor = Color(0xFF1A1A1A),
                 unfocusedContainerColor = Color(0xFF1A1A1A)
             ),
             shape = MaterialTheme.shapes.medium
@@ -77,7 +77,7 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
         } else {
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 80.dp) // FIX: Evita que el último elemento quede cortado por la navegación del celu
+                contentPadding = PaddingValues(bottom = 80.dp)
             ) {
 
                 // Criptos
@@ -87,8 +87,8 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                     }
                     items(filteredCryptos) { crypto ->
                         AssetRow(asset = crypto, onClick = {
-                            // FIX: Ruta simplificada sin el isCrypto final (vuelve al diseño original seguro)
-                            navController.navigate("asset_detail_screen/${crypto.ticker}/${crypto.name}/${crypto.currentPrice}/${crypto.changePercentage}")
+                            val encodedName = java.net.URLEncoder.encode(crypto.name, "UTF-8")
+                            navController.navigate("asset_detail_screen/${crypto.ticker}/$encodedName/${crypto.currentPrice}/${crypto.changePercentage}/true")
                         })
                     }
                 }
@@ -101,8 +101,8 @@ fun MarketScreen(navController: NavController, viewModel: MarketScreenViewModel 
                     }
                     items(filteredStocks) { stock ->
                         AssetRow(asset = stock, onClick = {
-                            // FIX: Ruta simplificada
-                            navController.navigate("asset_detail_screen/${stock.ticker}/${stock.name}/${stock.currentPrice}/${stock.changePercentage}")
+                            val encodedName = java.net.URLEncoder.encode(stock.name, "UTF-8")
+                            navController.navigate("asset_detail_screen/${stock.ticker}/$encodedName/${stock.currentPrice}/${stock.changePercentage}/false")
                         })
                     }
                 }

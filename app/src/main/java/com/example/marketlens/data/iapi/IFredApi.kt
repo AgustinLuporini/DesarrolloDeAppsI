@@ -9,6 +9,6 @@ interface IFredApi {
     suspend fun getObservation(
         @Query("series_id") seriesId: String,
         @Query("api_key") apiKey: String,
-        @Query("file_type") fileType: String = "json" // para recibir JSON
+        @Query("file_type") fileType: String = "json"
     ): FredResult
 }

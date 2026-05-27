@@ -46,21 +46,6 @@ fun AssetDetailScreen(
         HeaderSection(state, accentGreen)
 
         Spacer(modifier = Modifier.height(24.dp))
-
-        // --- Panel de Info Técnica ---
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            if (state.isCrypto) {
-                InfoCard("Market Cap", formatCompact(state.marketCap), Modifier.weight(1f))
-                InfoCard("ATH", "$${state.ath ?: "--"}", Modifier.weight(1f))
-            } else {
-                InfoCard("Apertura", "$${state.openPrice ?: "--"}", Modifier.weight(1f))
-                InfoCard("Máximo", "$${state.highPrice ?: "--"}", Modifier.weight(1f))
-            }
-        }
-
         Spacer(modifier = Modifier.height(20.dp))
 
         // --- Insight IA ---

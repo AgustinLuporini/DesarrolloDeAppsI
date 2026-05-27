@@ -18,6 +18,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.marketlens.components.Screen
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.marketlens.R
 
 @Composable
 fun ProfileScreen(
@@ -31,14 +35,14 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.Black)
-            .systemBarsPadding() // FIX: Evita que el contenido se superponga con la barra de estado superior e inferior
-            .padding(horizontal = 20.dp, vertical = 16.dp) // FIX: Márgenes unificados con el resto de la app
+            .systemBarsPadding()
+            .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         // --- INFORMACIÓN DEL USUARIO ---
         Text(
             text = state.userName,
             color = Color.White,
-            fontSize = 32.sp, // Aumentado ligeramente para coincidir con los headers de otras pantallas
+            fontSize = 32.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 4.dp)
         )
@@ -55,12 +59,11 @@ fun ProfileScreen(
         Text(
             text = "Mis Activos Favoritos",
             color = Color.Gray,
-            fontSize = 14.sp, // Ajustado para mantener jerarquía visual con el header
+            fontSize = 14.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 12.dp)
         )
 
-        // LazyColumn para listar
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             modifier = Modifier.weight(1f),
@@ -95,12 +98,19 @@ fun ProfileScreen(
             }
         }
 
-        // --- BOTÓN DE LOG OUT ---
+        val context = LocalContext.current
         Button(
             onClick = {
                 viewModel.logOut {
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(Screen.Home.route) { inclusive = true }
+                    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(context.getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build()
+                    val googleSignInClient = GoogleSignIn.getClient(context, gso)
+                    googleSignInClient.signOut().addOnCompleteListener {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Home.route) { inclusive = true }
+                        }
                     }
                 }
             },

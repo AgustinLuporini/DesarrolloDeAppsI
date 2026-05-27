@@ -36,7 +36,6 @@ class AssetDetailScreenViewModel : ViewModel() {
 
                 val mockAiSummary = "Analizando el sentimiento de las ${stockdataData.size + finnhubData.size} noticias encontradas para $ticker... Próximamente resumen con IA."
 
-                // Mocks dinámicos de datos técnicos dependiendo del tipo de activo
                 val updatedState = if (isCrypto) {
                     _uiState.value.copy(marketCap = price, ath = price)
                 } else {

@@ -5,7 +5,9 @@ import com.example.marketlens.data.iapi.ITiingoApi
 import com.example.marketlens.data.results.CoinGeckoResult
 import com.example.marketlens.data.results.TiingoResult
 
-class AssetApiDataSource(
+import javax.inject.Inject
+
+class AssetApiDataSource @Inject constructor(
     private val coinGeckoApi: ICoinGeckoApi,
     private val tiingoApi: ITiingoApi
 ) {

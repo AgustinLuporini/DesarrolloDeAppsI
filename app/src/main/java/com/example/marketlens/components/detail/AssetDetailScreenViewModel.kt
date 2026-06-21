@@ -3,15 +3,19 @@ package com.example.marketlens.components.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marketlens.data.network.NetworkConfig
-import com.example.marketlens.data.repository.NewsRepository
+import com.example.marketlens.domain.repository.INewsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
-class AssetDetailScreenViewModel : ViewModel() {
-    private val newsRepository = NewsRepository()
+@HiltViewModel
+class AssetDetailScreenViewModel @Inject constructor(
+    private val newsRepository: INewsRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AssetDetailScreenState())
     val uiState: StateFlow<AssetDetailScreenState> = _uiState.asStateFlow()

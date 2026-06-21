@@ -4,9 +4,11 @@ import com.example.marketlens.data.datasource.MacroApiDataSource
 import com.example.marketlens.domain.models.MacroIndicator
 import com.example.marketlens.domain.repository.IMacroRepository
 import com.example.marketlens.domain.mappers.toDomain
+import javax.inject.Inject
 
-class MacroRepository : IMacroRepository {
-    private val dataSource = MacroApiDataSource()
+class MacroRepository @Inject constructor(
+    private val dataSource: MacroApiDataSource
+) : IMacroRepository {
 
     override suspend fun getFearGreedIndex(): MacroIndicator {
         val result = dataSource.getFearGreed()
@@ -28,7 +30,7 @@ class MacroRepository : IMacroRepository {
         return result.toDomain(label)
     }
 
-    suspend fun getAllMacroIndicators(apiKey: String): List<MacroIndicator> {
+    override suspend fun getAllMacroIndicators(apiKey: String): List<MacroIndicator> {
         val ids = listOf(
             "GDP" to "PBI (USA)",
             "CPIAUCSL" to "Inflación (CPI)",

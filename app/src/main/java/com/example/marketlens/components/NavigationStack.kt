@@ -5,7 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -26,7 +26,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 @Composable
 fun NavigationStack() {
     val navController = rememberNavController()
-    val sharedHomeViewModel: HomeScreenViewModel = viewModel()
+    val sharedHomeViewModel: HomeScreenViewModel = hiltViewModel()
 
     NavHost(
         navController = navController,

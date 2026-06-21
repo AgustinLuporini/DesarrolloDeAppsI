@@ -15,8 +15,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marketlens.domain.models.MarketNews
 
 @Composable
@@ -26,7 +26,7 @@ fun AssetDetailScreen(
     price: Double,
     change: Double,
     isCrypto: Boolean,
-    viewModel: AssetDetailScreenViewModel = viewModel()
+    viewModel: AssetDetailScreenViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val accentGreen = Color(0xFF00C853)

@@ -3,8 +3,11 @@ import java.io.FileInputStream
 
 plugins {
     alias(libs.plugins.android.application)
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
     id("com.google.gms.google-services")
+    id("com.google.dagger.hilt.android")
 }
 
 val localProperties = Properties()
@@ -15,11 +18,7 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace = "com.example.marketlens"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.marketlens"
@@ -48,6 +47,9 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
     buildFeatures {
         compose = true
@@ -81,6 +83,39 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.13.0"))
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("com.google.firebase:firebase-firestore")
 
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.55")
+    "kapt"("com.google.dagger:hilt-compiler:2.55")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
+    // Room Database
+    implementation("androidx.room:room-runtime:2.6.1")
+    "kapt"("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    // DataStore Preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Biometrics
+    implementation("androidx.biometric:biometric:1.1.0")
+
+    // Google Generative AI (Gemini)
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    // Testing
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+    testImplementation("androidx.arch.core:core-testing:2.2.0")
+}
+
+configurations.all {
+    resolutionStrategy {
+        dependencySubstitution {
+            substitute(module("org.jetbrains.kotlinx:kotlinx-metadata-jvm"))
+                .using(module("org.jetbrains.kotlin:kotlin-metadata-jvm:2.2.10"))
+                .because("kotlinx-metadata-jvm is deprecated and moved to org.jetbrains.kotlin:kotlin-metadata-jvm")
+        }
+    }
 }

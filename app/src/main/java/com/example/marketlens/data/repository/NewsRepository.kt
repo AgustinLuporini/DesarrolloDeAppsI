@@ -4,10 +4,11 @@ import com.example.marketlens.data.datasource.NewsApiDataSource
 import com.example.marketlens.domain.models.MarketNews
 import com.example.marketlens.domain.repository.INewsRepository
 import com.example.marketlens.domain.mappers.toDomain
-import com.example.marketlens.data.RetrofitInstance
+import javax.inject.Inject
 
-class NewsRepository : INewsRepository {
-    private val dataSource = NewsApiDataSource()
+class NewsRepository @Inject constructor(
+    private val dataSource: NewsApiDataSource
+) : INewsRepository {
 
     override suspend fun getMarketNews(token: String): List<MarketNews> {
         val response = dataSource.getGeneralNews(token)

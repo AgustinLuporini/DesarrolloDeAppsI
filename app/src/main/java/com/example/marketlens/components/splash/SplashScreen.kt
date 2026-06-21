@@ -7,14 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -23,20 +21,57 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.marketlens.components.Screen
 import coil.compose.AsyncImage
+<<<<<<< Updated upstream
+=======
+import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.app.FragmentActivity
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.marketlens.utils.showBiometricPrompt
+>>>>>>> Stashed changes
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     navController: NavHostController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SplashScreenViewModel = hiltViewModel()
 ) {
     val marketGreen = Color(0xFF00C853)
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         delay(2000)
+<<<<<<< Updated upstream
         navController.navigate(Screen.Home.route) {
             popUpTo(Screen.Splash.route) {
                 inclusive = true
+=======
+        if (viewModel.isUserLoggedIn) {
+            val biometricEnabled = viewModel.isBiometricEnabled()
+            val activity = context as? FragmentActivity
+            if (biometricEnabled && activity != null) {
+                showBiometricPrompt(
+                    activity = activity,
+                    onSuccess = {
+                        navController.navigate(Screen.Home.route) {
+                            popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    },
+                    onError = {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.Splash.route) { inclusive = true }
+                        }
+                    }
+                )
+            } else {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Splash.route) { inclusive = true }
+                }
+            }
+        } else {
+            navController.navigate(Screen.Login.route) {
+                popUpTo(Screen.Splash.route) { inclusive = true }
+>>>>>>> Stashed changes
             }
         }
     }
@@ -60,7 +95,6 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-
             Text(
                 text = "MarketLens",
                 style = MaterialTheme.typography.headlineMedium.copy(
@@ -71,7 +105,6 @@ fun SplashScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
 
             Text(
                 text = "Tu ventana al mercado global",

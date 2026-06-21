@@ -22,6 +22,9 @@ interface AssetDao {
 
     @Query("UPDATE assets SET is_favorite = :isFavorite WHERE id = :id")
     suspend fun updateFavoriteStatus(id: String, isFavorite: Boolean)
+
+    @Query("SELECT is_favorite FROM assets WHERE id = :id")
+    fun isFavoriteFlow(id: String): Flow<Boolean?>
 }
 
 @Dao

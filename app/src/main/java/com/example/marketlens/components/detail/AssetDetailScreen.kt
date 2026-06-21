@@ -43,7 +43,7 @@ fun AssetDetailScreen(
             .padding(horizontal = 20.dp, vertical = 16.dp)
     ) {
         // --- Header ---
-        HeaderSection(state, accentGreen)
+        HeaderSection(state, accentGreen, onFavoriteToggle = { viewModel.toggleFavorite() })
 
         Spacer(modifier = Modifier.height(24.dp))
         Spacer(modifier = Modifier.height(20.dp))
@@ -90,14 +90,28 @@ fun AssetDetailScreen(
 // ==========================================
 
 @Composable
-private fun HeaderSection(state: AssetDetailScreenState, accentGreen: Color) {
+private fun HeaderSection(
+    state: AssetDetailScreenState, 
+    accentGreen: Color, 
+    onFavoriteToggle: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
-            Text(state.ticker, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(state.ticker, color = Color.White, fontSize = 32.sp, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(onClick = onFavoriteToggle) {
+                    Text(
+                        text = if (state.isFavorite) "★" else "☆",
+                        color = accentGreen,
+                        fontSize = 28.sp
+                    )
+                }
+            }
             Text(state.assetName, color = Color.Gray, fontSize = 16.sp)
         }
         Column(horizontalAlignment = Alignment.End) {

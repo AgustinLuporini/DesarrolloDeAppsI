@@ -39,6 +39,7 @@ fun NavigationStack() {
         // Login
         composable(Screen.Login.route) {
             val context = LocalContext.current
+            val loginViewModel: com.example.marketlens.components.login.LoginScreenViewModel = hiltViewModel()
 
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(context.getString(R.string.default_web_client_id))
@@ -57,8 +58,17 @@ fun NavigationStack() {
                         FirebaseAuth.getInstance().signInWithCredential(credential)
                             .addOnCompleteListener { authTask ->
                                 if (authTask.isSuccessful) {
-                                    navController.navigate(Screen.Home.route) {
-                                        popUpTo(Screen.Login.route) { inclusive = true }
+                                    val user = authTask.result?.user
+                                    if (user != null) {
+                                        loginViewModel.onLoginSuccess(user) {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(Screen.Login.route) { inclusive = true }
+                                            }
+                                        }
+                                    } else {
+                                        navController.navigate(Screen.Home.route) {
+                                            popUpTo(Screen.Login.route) { inclusive = true }
+                                        }
                                     }
                                 }
                             }

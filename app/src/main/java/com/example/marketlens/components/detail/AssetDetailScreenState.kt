@@ -10,6 +10,7 @@
         val changePercentage: Double = 0.0,
         // Datos Dinámicos
         val isCrypto: Boolean = false,
+        val isFavorite: Boolean = false,
         val openPrice: Double? = null,
         val highPrice: Double? = null,
         val marketCap: Double? = null,

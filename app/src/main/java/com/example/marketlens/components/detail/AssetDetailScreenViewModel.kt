@@ -3,6 +3,7 @@ package com.example.marketlens.components.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.marketlens.data.network.NetworkConfig
+import com.example.marketlens.domain.repository.IAssetRepository
 import com.example.marketlens.domain.repository.INewsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,13 +15,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssetDetailScreenViewModel @Inject constructor(
-    private val newsRepository: INewsRepository
+    private val newsRepository: INewsRepository,
+    private val assetRepository: IAssetRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AssetDetailScreenState())
     val uiState: StateFlow<AssetDetailScreenState> = _uiState.asStateFlow()
 
     private var newsCollectionJob: kotlinx.coroutines.Job? = null
+    private var favoriteCollectionJob: kotlinx.coroutines.Job? = null
 
     fun loadAssetDetails(ticker: String, name: String, price: Double, change: Double, isCrypto: Boolean) {
         _uiState.value = _uiState.value.copy(
@@ -30,6 +33,13 @@ class AssetDetailScreenViewModel @Inject constructor(
             changePercentage = change,
             isCrypto = isCrypto
         )
+
+        favoriteCollectionJob?.cancel()
+        favoriteCollectionJob = viewModelScope.launch {
+            assetRepository.isFavoriteStream(ticker).collect { isFav ->
+                _uiState.value = _uiState.value.copy(isFavorite = isFav)
+            }
+        }
 
         newsCollectionJob?.cancel()
         newsCollectionJob = viewModelScope.launch {
@@ -77,6 +87,13 @@ class AssetDetailScreenViewModel @Inject constructor(
                     error = e.message ?: "Error al unificar fuentes de noticias"
                 )
             }
+        }
+    }
+
+    fun toggleFavorite() {
+        viewModelScope.launch {
+            val currentFav = _uiState.value.isFavorite
+            assetRepository.toggleFavorite(_uiState.value.ticker, !currentFav)
         }
     }
 }

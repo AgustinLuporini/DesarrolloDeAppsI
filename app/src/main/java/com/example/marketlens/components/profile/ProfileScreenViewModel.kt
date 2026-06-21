@@ -1,20 +1,44 @@
 package com.example.marketlens.components.profile
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.marketlens.domain.repository.IAssetRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileScreenViewModel @Inject constructor() : ViewModel() {
+class ProfileScreenViewModel @Inject constructor(
+    private val assetRepository: IAssetRepository,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileScreenState())
     val uiState: StateFlow<ProfileScreenState> = _uiState.asStateFlow()
 
+    init {
+        loadUserProfile()
+    }
+
+    private fun loadUserProfile() {
+        val currentUser = firebaseAuth.currentUser
+        val displayName = currentUser?.displayName ?: currentUser?.email ?: "Usuario"
+
+        viewModelScope.launch {
+            assetRepository.getFavoritesStream().collect { favorites ->
+                _uiState.value = _uiState.value.copy(
+                    userName = displayName,
+                    favoriteAssets = favorites.map { it.ticker }
+                )
+            }
+        }
+    }
+
     fun logOut(onSuccess: () -> Unit) {
-        FirebaseAuth.getInstance().signOut()
+        firebaseAuth.signOut()
         onSuccess()
     }
 }

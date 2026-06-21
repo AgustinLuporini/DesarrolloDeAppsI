@@ -12,4 +12,6 @@ interface IAssetRepository {
     suspend fun refreshCryptos()
     suspend fun refreshStocks(tickers: String, token: String)
     suspend fun toggleFavorite(id: String, isFavorite: Boolean)
+    fun isFavoriteStream(id: String): Flow<Boolean>
+    suspend fun syncUserSession(firebaseUser: com.google.firebase.auth.FirebaseUser)
 }

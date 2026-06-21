@@ -1,9 +1,12 @@
 package com.example.marketlens.domain.repository
 
 import com.example.marketlens.domain.models.MarketNews
+import kotlinx.coroutines.flow.Flow
 
 interface INewsRepository {
-    suspend fun getMarketNews(token: String): List<MarketNews>
-    suspend fun getAssetSentiment(symbol: String, token: String): List<MarketNews>
-    suspend fun getAssetNews (ticker: String, from: String, to: String, apiKey: String): List<MarketNews>
+    fun getGeneralNewsStream(): Flow<List<MarketNews>>
+    fun getNewsByAssetStream(assetId: String): Flow<List<MarketNews>>
+    suspend fun refreshGeneralNews(token: String)
+    suspend fun refreshAssetNews(ticker: String, from: String, to: String, apiKey: String)
+    suspend fun refreshAssetSentiment(symbol: String, token: String)
 }

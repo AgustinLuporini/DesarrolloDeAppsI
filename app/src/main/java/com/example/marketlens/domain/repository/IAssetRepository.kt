@@ -1,9 +1,15 @@
 package com.example.marketlens.domain.repository
 
+import com.example.marketlens.domain.models.Asset
 import com.example.marketlens.domain.models.Crypto
 import com.example.marketlens.domain.models.Stock
+import kotlinx.coroutines.flow.Flow
 
 interface IAssetRepository {
-    suspend fun getCryptos(): List<Crypto>
-    suspend fun getStocks(tickers: String, token: String): List<Stock>
+    fun getCryptosStream(): Flow<List<Crypto>>
+    fun getStocksStream(): Flow<List<Stock>>
+    fun getFavoritesStream(): Flow<List<Asset>>
+    suspend fun refreshCryptos()
+    suspend fun refreshStocks(tickers: String, token: String)
+    suspend fun toggleFavorite(id: String, isFavorite: Boolean)
 }

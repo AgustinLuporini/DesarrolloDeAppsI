@@ -20,9 +20,10 @@ class AssetDetailScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AssetDetailScreenState())
     val uiState: StateFlow<AssetDetailScreenState> = _uiState.asStateFlow()
 
+    private var newsCollectionJob: kotlinx.coroutines.Job? = null
+
     fun loadAssetDetails(ticker: String, name: String, price: Double, change: Double, isCrypto: Boolean) {
         _uiState.value = _uiState.value.copy(
-            isLoading = true,
             ticker = ticker,
             assetName = name,
             currentPrice = price,
@@ -30,15 +31,38 @@ class AssetDetailScreenViewModel @Inject constructor(
             isCrypto = isCrypto
         )
 
+        newsCollectionJob?.cancel()
+        newsCollectionJob = viewModelScope.launch {
+            newsRepository.getNewsByAssetStream(ticker).collect { newsList ->
+                val stockdataData = newsList.filter { it.sentimentScore != null }
+                val finnhubData = newsList.filter { it.sentimentScore == null }
+                val mockAiSummary = "Analizando el sentimiento de las ${newsList.size} noticias encontradas para $ticker... Próximamente resumen con IA."
+
+                _uiState.value = _uiState.value.copy(
+                    assetNews = stockdataData,
+                    finnhubNews = finnhubData,
+                    aiSummary = mockAiSummary
+                )
+            }
+        }
+
         viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(
+                isLoading = _uiState.value.assetNews.isEmpty() && _uiState.value.finnhubNews.isEmpty(),
+                error = null
+            )
             try {
                 val today = LocalDate.now().toString()
                 val aWeekAgo = LocalDate.now().minusDays(7).toString()
 
-                val stockdataData = newsRepository.getAssetSentiment(ticker, NetworkConfig.STOCKDATA_KEY)
-                val finnhubData = newsRepository.getAssetNews(ticker, aWeekAgo, today, NetworkConfig.FINNHUB_KEY)
-
-                val mockAiSummary = "Analizando el sentimiento de las ${stockdataData.size + finnhubData.size} noticias encontradas para $ticker... Próximamente resumen con IA."
+                val sentimentJob = launch {
+                    newsRepository.refreshAssetSentiment(ticker, NetworkConfig.STOCKDATA_KEY)
+                }
+                val corporateJob = launch {
+                    newsRepository.refreshAssetNews(ticker, aWeekAgo, today, NetworkConfig.FINNHUB_KEY)
+                }
+                sentimentJob.join()
+                corporateJob.join()
 
                 val updatedState = if (isCrypto) {
                     _uiState.value.copy(marketCap = price, ath = price)
@@ -46,12 +70,7 @@ class AssetDetailScreenViewModel @Inject constructor(
                     _uiState.value.copy(openPrice = price, highPrice = price)
                 }
 
-                _uiState.value = updatedState.copy(
-                    isLoading = false,
-                    assetNews = stockdataData,
-                    finnhubNews = finnhubData,
-                    aiSummary = mockAiSummary
-                )
+                _uiState.value = updatedState.copy(isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

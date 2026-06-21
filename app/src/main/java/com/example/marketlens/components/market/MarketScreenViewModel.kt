@@ -20,32 +20,42 @@ class MarketScreenViewModel @Inject constructor(
     val uiState: StateFlow<MarketScreenState> = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            assetRepository.getCryptosStream().collect { cryptos ->
+                _uiState.value = _uiState.value.copy(cryptos = cryptos)
+            }
+        }
+        viewModelScope.launch {
+            assetRepository.getStocksStream().collect { stocks ->
+                _uiState.value = _uiState.value.copy(stocks = stocks)
+            }
+        }
         loadMarketData()
     }
 
     fun loadMarketData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(isLoading = _uiState.value.cryptos.isEmpty() && _uiState.value.stocks.isEmpty(), error = null)
             try {
-                val cryptoList = assetRepository.getCryptos()
-
-                val stockList = assetRepository.getStocks(
-                    tickers = "AAPL,MSFT,GOOGL,AMZN,TSLA,NVDA,META,AVGO,ORCL,ADBE,CRM,AMD,NFLX," +
-                            "CSCO,INTC,TXN,QCOM,IBM,JPM,BAC,WFC,GS,MS,V,MA,PYPL,WMT,COST,PG,KO," +
-                            "PEP,NKE,MCD,DIS,SBUX,XOM,CVX,CAT,GE,HON,BA,JNJ,LLY,UNH,PFE,ABBV,MRK," +
-                            "GLOB,VZ,UPS",
-                    token = NetworkConfig.TIINGO_KEY
-                )
-
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    cryptos = cryptoList,
-                    stocks = stockList
-                )
+                val cryptosJob = launch {
+                    assetRepository.refreshCryptos()
+                }
+                val stocksJob = launch {
+                    assetRepository.refreshStocks(
+                        tickers = "AAPL,MSFT,GOOGL,AMZN,TSLA,NVDA,META,AVGO,ORCL,ADBE,CRM,AMD,NFLX," +
+                                "CSCO,INTC,TXN,QCOM,IBM,JPM,BAC,WFC,GS,MS,V,MA,PYPL,WMT,COST,PG,KO," +
+                                "PEP,NKE,MCD,DIS,SBUX,XOM,CVX,CAT,GE,HON,BA,JNJ,LLY,UNH,PFE,ABBV,MRK," +
+                                "GLOB,VZ,UPS",
+                        token = NetworkConfig.TIINGO_KEY
+                    )
+                }
+                cryptosJob.join()
+                stocksJob.join()
+                _uiState.value = _uiState.value.copy(isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
-                    error = e.message ?: "Error al cargar activos"
+                    error = e.message ?: "Error al actualizar activos"
                 )
             }
         }

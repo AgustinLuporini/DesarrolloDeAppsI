@@ -23,22 +23,37 @@ class HomeScreenViewModel @Inject constructor(
     val uiState: StateFlow<HomeScreenState> = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            newsRepository.getGeneralNewsStream().collect { news ->
+                _uiState.value = _uiState.value.copy(marketNews = news)
+            }
+        }
+        viewModelScope.launch {
+            macroRepository.getMacroIndicatorsStream().collect { indicators ->
+                val fng = indicators.find { it.id == "FNG" }
+                val macros = indicators.filter { it.id != "FNG" }
+                _uiState.value = _uiState.value.copy(
+                    fearAndGreed = fng,
+                    macroIndicators = macros
+                )
+            }
+        }
         fetchHomeData()
     }
 
     fun fetchHomeData() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isLoading = true)
-            android.util.Log.d("MarketLensTRACK", "[VIEWMODEL] !!! Nací en memoria. Saliendo a buscar datos a FRED y Finnhub ahora mismo")
+            _uiState.value = _uiState.value.copy(
+                isLoading = _uiState.value.marketNews.isEmpty() && _uiState.value.macroIndicators.isEmpty(),
+                error = null
+            )
+            android.util.Log.d("MarketLensTRACK", "[VIEWMODEL] !!! Nací en memoria. Refrescando datos en Room en segundo plano.")
             
-            var newsList = emptyList<com.example.marketlens.domain.models.MarketNews>()
-            var fearGreedIndex: com.example.marketlens.domain.models.MacroIndicator? = null
-            var macroList = emptyList<com.example.marketlens.domain.models.MacroIndicator>()
             var errorMessage: String? = null
 
             // 1. Obtener noticias de Finnhub
             try {
-                newsList = newsRepository.getMarketNews(NetworkConfig.FINNHUB_KEY)
+                newsRepository.refreshGeneralNews(NetworkConfig.FINNHUB_KEY)
             } catch (e: Exception) {
                 android.util.Log.e("MarketLensTRACK", "Error al cargar noticias de Finnhub", e)
                 errorMessage = "Error noticias: ${e.message}"
@@ -46,7 +61,7 @@ class HomeScreenViewModel @Inject constructor(
 
             // 2. Obtener Índice de Miedo y Codicia
             try {
-                fearGreedIndex = macroRepository.getFearGreedIndex()
+                macroRepository.refreshFearGreedIndex()
             } catch (e: Exception) {
                 android.util.Log.e("MarketLensTRACK", "Error al cargar Fear & Greed index", e)
                 if (errorMessage == null) errorMessage = "Error Fear & Greed: ${e.message}"
@@ -54,7 +69,7 @@ class HomeScreenViewModel @Inject constructor(
 
             // 3. Obtener Indicadores Macroeconómicos de FRED
             try {
-                macroList = macroRepository.getAllMacroIndicators(NetworkConfig.FRED_KEY)
+                macroRepository.refreshMacroIndicators(NetworkConfig.FRED_KEY)
             } catch (e: Exception) {
                 android.util.Log.e("MarketLensTRACK", "Error al cargar indicadores de FRED", e)
                 if (errorMessage == null) errorMessage = "Error FRED: ${e.message}"
@@ -62,15 +77,12 @@ class HomeScreenViewModel @Inject constructor(
 
             _uiState.value = _uiState.value.copy(
                 isLoading = false,
-                marketNews = newsList,
-                fearAndGreed = fearGreedIndex,
-                macroIndicators = macroList,
                 error = errorMessage
             )
 
             android.util.Log.d(
                 "MarketLensTRACK",
-                "[VIEWMODEL] Carga de Home finalizada. Estado: News size=${newsList.size}, FearGreed=${fearGreedIndex?.value}, Macro size=${macroList.size}"
+                "[VIEWMODEL] Carga de Home finalizada."
             )
         }
     }

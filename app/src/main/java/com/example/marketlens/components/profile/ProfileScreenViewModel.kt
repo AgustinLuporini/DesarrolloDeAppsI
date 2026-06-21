@@ -2,6 +2,7 @@ package com.example.marketlens.components.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.marketlens.data.store.SessionDataStore
 import com.example.marketlens.domain.repository.IAssetRepository
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileScreenViewModel @Inject constructor(
     private val assetRepository: IAssetRepository,
-    private val firebaseAuth: FirebaseAuth
+    private val firebaseAuth: FirebaseAuth,
+    private val sessionDataStore: SessionDataStore
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ProfileScreenState())
     val uiState: StateFlow<ProfileScreenState> = _uiState.asStateFlow()
@@ -34,6 +36,20 @@ class ProfileScreenViewModel @Inject constructor(
                     favoriteAssets = favorites.map { it.ticker }
                 )
             }
+        }
+
+        viewModelScope.launch {
+            sessionDataStore.isBiometricEnabled.collect { enabled ->
+                _uiState.value = _uiState.value.copy(
+                    isBiometricEnabled = enabled
+                )
+            }
+        }
+    }
+
+    fun setBiometricEnabled(enabled: Boolean) {
+        viewModelScope.launch {
+            sessionDataStore.setBiometricEnabled(enabled)
         }
     }
 

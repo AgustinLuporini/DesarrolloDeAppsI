@@ -55,6 +55,38 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
+        // --- CONFIGURACIÓN BIOMÉTRICA ---
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text("Acceso Biométrico", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                    Text("Habilitar huella dactilar", color = Color.Gray, fontSize = 12.sp)
+                }
+                Switch(
+                    checked = state.isBiometricEnabled,
+                    onCheckedChange = { viewModel.setBiometricEnabled(it) },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = Color.Black,
+                        checkedTrackColor = accentGreen,
+                        uncheckedThumbColor = Color.Gray,
+                        uncheckedTrackColor = Color.DarkGray
+                    )
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
         // --- SECCIÓN ACTIVOS FAVORITOS ---
         Text(
             text = "Mis Activos Favoritos",

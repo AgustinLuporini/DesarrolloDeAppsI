@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.marketlens.domain.repository.IAssetRepository
 import com.example.marketlens.data.network.NetworkConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,20 +39,22 @@ class MarketScreenViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = _uiState.value.cryptos.isEmpty() && _uiState.value.stocks.isEmpty(), error = null)
             try {
-                val cryptosJob = launch {
-                    assetRepository.refreshCryptos()
+                coroutineScope {
+                    val cryptosDeferred = async {
+                        assetRepository.refreshCryptos()
+                    }
+                    val stocksDeferred = async {
+                        assetRepository.refreshStocks(
+                            tickers = "AAPL,MSFT,GOOGL,AMZN,TSLA,NVDA,META,AVGO,ORCL,ADBE,CRM,AMD,NFLX," +
+                                    "CSCO,INTC,TXN,QCOM,IBM,JPM,BAC,WFC,GS,MS,V,MA,PYPL,WMT,COST,PG,KO," +
+                                    "PEP,NKE,MCD,DIS,SBUX,XOM,CVX,CAT,GE,HON,BA,JNJ,LLY,UNH,PFE,ABBV,MRK," +
+                                    "GLOB,VZ,UPS",
+                            token = NetworkConfig.TIINGO_KEY
+                        )
+                    }
+                    cryptosDeferred.await()
+                    stocksDeferred.await()
                 }
-                val stocksJob = launch {
-                    assetRepository.refreshStocks(
-                        tickers = "AAPL,MSFT,GOOGL,AMZN,TSLA,NVDA,META,AVGO,ORCL,ADBE,CRM,AMD,NFLX," +
-                                "CSCO,INTC,TXN,QCOM,IBM,JPM,BAC,WFC,GS,MS,V,MA,PYPL,WMT,COST,PG,KO," +
-                                "PEP,NKE,MCD,DIS,SBUX,XOM,CVX,CAT,GE,HON,BA,JNJ,LLY,UNH,PFE,ABBV,MRK," +
-                                "GLOB,VZ,UPS",
-                        token = NetworkConfig.TIINGO_KEY
-                    )
-                }
-                cryptosJob.join()
-                stocksJob.join()
                 _uiState.value = _uiState.value.copy(isLoading = false)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(

@@ -3,9 +3,11 @@ package com.example.marketlens.di
 import com.example.marketlens.data.repository.AssetRepository
 import com.example.marketlens.data.repository.MacroRepository
 import com.example.marketlens.data.repository.NewsRepository
+import com.example.marketlens.data.repository.AiRepository
 import com.example.marketlens.domain.repository.IAssetRepository
 import com.example.marketlens.domain.repository.IMacroRepository
 import com.example.marketlens.domain.repository.INewsRepository
+import com.example.marketlens.domain.repository.IAiRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,10 @@ abstract class RepositoryModule {
     abstract fun bindNewsRepository(
         newsRepository: NewsRepository
     ): INewsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAiRepository(
+        aiRepository: AiRepository
+    ): IAiRepository
 }

@@ -33,6 +33,7 @@ android {
         buildConfigField("String", "TIINGO_KEY", "\"${localProperties.getProperty("TIINGO_API_KEY")}\"")
         buildConfigField("String", "STOCKDATA_KEY", "\"${localProperties.getProperty("STOCKDATA_API_KEY")}\"")
         buildConfigField("String", "FRED_KEY", "\"${localProperties.getProperty("FRED_API_KEY")}\"")
+        buildConfigField("String", "GEMINI_KEY", "\"${localProperties.getProperty("GEMINI_API_KEY") ?: ""}\"")
     }
 
     buildTypes {

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.marketlens.data.network.NetworkConfig
 import com.example.marketlens.domain.repository.IAssetRepository
 import com.example.marketlens.domain.repository.INewsRepository
+import com.example.marketlens.domain.repository.IAiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AssetDetailScreenViewModel @Inject constructor(
     private val newsRepository: INewsRepository,
-    private val assetRepository: IAssetRepository
+    private val assetRepository: IAssetRepository,
+    private val aiRepository: IAiRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AssetDetailScreenState())
@@ -46,12 +48,29 @@ class AssetDetailScreenViewModel @Inject constructor(
             newsRepository.getNewsByAssetStream(ticker).collect { newsList ->
                 val stockdataData = newsList.filter { it.sentimentScore != null }
                 val finnhubData = newsList.filter { it.sentimentScore == null }
-                val mockAiSummary = "Analizando el sentimiento de las ${newsList.size} noticias encontradas para $ticker... Próximamente resumen con IA."
 
                 _uiState.value = _uiState.value.copy(
                     assetNews = stockdataData,
-                    finnhubNews = finnhubData,
-                    aiSummary = mockAiSummary
+                    finnhubNews = finnhubData
+                )
+            }
+        }
+
+        // 1. Cargar caché de IA inmediatamente (si existe y es válida)
+        viewModelScope.launch {
+            val cached = aiRepository.getCachedInsight(ticker)
+            val now = System.currentTimeMillis()
+            if (cached != null && (now - cached.timestamp < 4 * 60 * 60 * 1000)) {
+                _uiState.value = _uiState.value.copy(
+                    aiSummary = cached.summaryText,
+                    aiConfidenceScore = cached.confidenceScore,
+                    isAiLoading = false
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    aiSummary = null,
+                    aiConfidenceScore = null,
+                    isAiLoading = false
                 )
             }
         }
@@ -81,10 +100,43 @@ class AssetDetailScreenViewModel @Inject constructor(
                 }
 
                 _uiState.value = updatedState.copy(isLoading = false)
+
+                // 2. Verificar caché de IA tras actualizar noticias
+                val cached = aiRepository.getCachedInsight(ticker)
+                val now = System.currentTimeMillis()
+                if (cached != null && (now - cached.timestamp < 4 * 60 * 60 * 1000)) {
+                    _uiState.value = _uiState.value.copy(
+                        aiSummary = cached.summaryText,
+                        aiConfidenceScore = cached.confidenceScore,
+                        isAiLoading = false
+                    )
+                }
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = e.message ?: "Error al unificar fuentes de noticias"
+                )
+            }
+        }
+    }
+
+    fun generateAiInsight() {
+        val ticker = _uiState.value.ticker
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isAiLoading = true)
+            val latestNews = _uiState.value.assetNews + _uiState.value.finnhubNews
+            val result = aiRepository.generateInsight(ticker, latestNews)
+            if (result != null) {
+                _uiState.value = _uiState.value.copy(
+                    aiSummary = result.summaryText,
+                    aiConfidenceScore = result.confidenceScore,
+                    isAiLoading = false
+                )
+            } else {
+                _uiState.value = _uiState.value.copy(
+                    aiSummary = "No se pudo generar el análisis en este momento.",
+                    aiConfidenceScore = null,
+                    isAiLoading = false
                 )
             }
         }

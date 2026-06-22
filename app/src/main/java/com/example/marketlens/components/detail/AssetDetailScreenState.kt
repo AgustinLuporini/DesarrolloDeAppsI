@@ -19,5 +19,7 @@
         val assetNews: List<MarketNews> = emptyList(),
         val finnhubNews: List<MarketNews> = emptyList(),
         val aiSummary: String? = null,
+        val aiConfidenceScore: Int? = null,
+        val isAiLoading: Boolean = false,
         val error: String? = null
     )

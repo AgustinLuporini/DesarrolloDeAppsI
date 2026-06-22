@@ -41,6 +41,9 @@ interface NewsDao {
     @Query("SELECT * FROM news_cache WHERE asset_id = :assetId")
     fun getNewsByAssetFlow(assetId: String): Flow<List<NewsCacheEntity>>
 
+    @Query("SELECT * FROM news_cache WHERE asset_id = :assetId")
+    suspend fun getNewsByAsset(assetId: String): List<NewsCacheEntity>
+
     @Query("SELECT * FROM news_cache WHERE category = 'general'")
     fun getGeneralNewsFlow(): Flow<List<NewsCacheEntity>>
 

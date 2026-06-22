@@ -49,7 +49,13 @@ fun AssetDetailScreen(
         Spacer(modifier = Modifier.height(20.dp))
 
         // --- Insight IA ---
-        IASummaryCard(state.aiSummary, accentGreen)
+        IASummaryCard(
+            summary = state.aiSummary,
+            confidenceScore = state.aiConfidenceScore,
+            isLoading = state.isAiLoading,
+            accentGreen = accentGreen,
+            onGenerateClick = { viewModel.generateAiInsight() }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -141,16 +147,71 @@ private fun InfoCard(label: String, value: String, modifier: Modifier) {
 }
 
 @Composable
-private fun IASummaryCard(summary: String?, accentGreen: Color) {
-    Card(
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
-        shape = RoundedCornerShape(12.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text("Insight de Inteligencia Artificial", color = accentGreen, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(6.dp))
-            Text(text = summary ?: "Generando resumen inteligente...", color = Color.White, fontSize = 14.sp)
+private fun IASummaryCard(
+    summary: String?,
+    confidenceScore: Int?,
+    isLoading: Boolean,
+    accentGreen: Color,
+    onGenerateClick: () -> Unit
+) {
+    if (summary == null && !isLoading) {
+        Button(
+            onClick = onGenerateClick,
+            colors = ButtonDefaults.buttonColors(containerColor = accentGreen),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth().height(50.dp)
+        ) {
+            Text(
+                text = "Generar Insight con IA",
+                color = Color.Black,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp
+            )
+        }
+    } else {
+        Card(
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Insight de Inteligencia Artificial",
+                            color = accentGreen,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        if (isLoading) {
+                            Spacer(modifier = Modifier.width(8.dp))
+                            CircularProgressIndicator(
+                                color = accentGreen,
+                                modifier = Modifier.size(12.dp),
+                                strokeWidth = 1.5.dp
+                            )
+                        }
+                    }
+                    if (confidenceScore != null) {
+                        Text(
+                            text = "Confianza: $confidenceScore%",
+                            color = Color.Gray,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = if (isLoading && summary == null) "Generando resumen inteligente..." else summary ?: "No hay análisis de IA disponible.",
+                    color = Color.White,
+                    fontSize = 14.sp
+                )
+            }
         }
     }
 }

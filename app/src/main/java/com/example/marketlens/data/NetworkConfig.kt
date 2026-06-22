@@ -7,4 +7,5 @@ object NetworkConfig {
     val TIINGO_KEY = BuildConfig.TIINGO_KEY
     val STOCKDATA_KEY = BuildConfig.STOCKDATA_KEY
     val FRED_KEY = BuildConfig.FRED_KEY
+    val GEMINI_KEY = BuildConfig.GEMINI_KEY
 }
